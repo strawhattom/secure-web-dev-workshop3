@@ -64,7 +64,7 @@ router.route('/locations/:id')
 		else 
 			return res.status(404).send("Location not found");
 	})
-	.put(async (req, res) => {
+	.patch(async (req, res) => {
 		const _id = req.params.id;
 		const response = await locationsService.updateOne({_id}, req.body);
 		if (response)
