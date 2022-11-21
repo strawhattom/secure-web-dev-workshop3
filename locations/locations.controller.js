@@ -57,6 +57,7 @@ router.route('/locations')
 
 router.route('/locations/:id')
 	.get(async (req, res) => {
+		if (req?.params?.id) return res.status(400).send("Bad request, please provide an ID");
 		const _id = req.params.id;
 		const response = await locationsService.findOne({_id});
 		if (response) 
@@ -65,6 +66,7 @@ router.route('/locations/:id')
 			return res.status(404).send("Location not found");
 	})
 	.patch(async (req, res) => {
+		if (req?.params?.id && req?.body) return res.status(400).send("Bad request, please check the id and the body");
 		const _id = req.params.id;
 		const response = await locationsService.updateOne({_id}, req.body);
 		if (response)
@@ -73,6 +75,7 @@ router.route('/locations/:id')
 			return res.status(400).send("Location not found");
 	})
 	.delete(async (req, res) => {
+		if (req?.params?.id) return res.status(400).send("Bad request, please provide an ID");
 		const _id = req.params.id;
 		const response = await locationsService.deleteOne({_id});
 		if (response) 
