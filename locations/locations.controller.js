@@ -4,6 +4,18 @@
 const router = require('express').Router()
 const locationsService = require('./locations.service')
 
+
+const checkUser = () => {
+	
+};
+
+// Middleware
+
+router.use((req, res, next) => {
+
+});
+
+// Routes
 router.get('/', (req, res) => {
 	return res.status(200).send("Hello World");
 })
