@@ -5,19 +5,18 @@ const router = require('express').Router()
 const locationsService = require('./locations.service')
 
 
-const checkUser = () => {
-	
+const checkUser = (req,res,next) => {
+	if (!req.headers.authorization) {
+		return res.status(403).send({ error: 'Not logged' });
+	}
+	next();
 };
 
-// Middleware
-
-router.use((req, res, next) => {
-
-});
+router.use('/locations', checkUser);
 
 // Routes
 router.get('/', (req, res) => {
-	return res.status(200).send("Hello World");
+	return res.status(200).send("Hello World, go on /locations to get all locations");
 })
 
 router.route('/locations')

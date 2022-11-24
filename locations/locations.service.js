@@ -21,23 +21,23 @@ async function findOne({_id}) {
 async function createOne(location) {
 	try {
 		if (location === undefined) throw new Error("undefined location");
-		else {
-			const { filmType, filmProducerName, endDate, filmName, district, geolocation, sourceLocationId, filmDirectorname, address, startDate, year } = location;
-			await Location.create({ filmType,
-				filmProducerName,
-				endDate,
-				filmName,
-				district,
-				geolocation,
-				sourceLocationId,
-				filmDirectorname,
-				address,
-				startDate,
-				year
-			}).orFail();
-        	console.log("Location added");
-			return true;
-		}
+		
+		const { filmType, filmProducerName, endDate, filmName, district, geolocation, sourceLocationId, filmDirectorname, address, startDate, year } = location;
+		await Location.create({ filmType,
+			filmProducerName,
+			endDate,
+			filmName,
+			district,
+			geolocation,
+			sourceLocationId,
+			filmDirectorname,
+			address,
+			startDate,
+			year
+		}).orFail();
+		console.log("Location added");
+		return true;
+		
     } catch (err) {
         console.log("No location");
 		console.error(err);
