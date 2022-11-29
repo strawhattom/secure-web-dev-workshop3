@@ -17,7 +17,8 @@ router.post('/users/register', async (req, res) => {
 router.post('/users/login', 
     passport.authenticate('local', { session:false, failureRedirect:'/'}),
     async (req, res) => {
-        return res.status(200).send(req.user);
+        const token = await usersService.generateJWT(req.user?.username)
+        return res.status(200).send({token});
     });
 
 // Get self

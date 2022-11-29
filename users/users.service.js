@@ -1,6 +1,7 @@
 const User = require('./users.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const saltRounds = 10;
 
@@ -53,9 +54,14 @@ async function verify(username, password) {
     }
 }
 
+async function generateJWT(username) {
+    return jwt.sign({sub:username}, process.env.JWT_SECRET);
+}
+
 module.exports = {
     register,
     findAll,
     checkUser,
     verify,
+    generateJWT
 }
