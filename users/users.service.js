@@ -1,23 +1,23 @@
 const User = require('./users.model');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const saltRounds = 10;
 
-async function createUser(user) {
+async function register(username, password) {
     try {
         if (user === undefined) throw new Error("undefined location");
-        const {username, password} = user;
-        const hashedPassword = bcrypt.hashSync(password, saltRounds);
-        await User.create({
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const user = await User.create({
             username,
             password:hashedPassword
         });
         console.log(`[+] Added user : ${username}:${password}`);
-        return true;
+        return user;
     } catch (err) {
         console.log("[!] No user created");
 		console.error(err);
-		return false;
+		return null;
     }
 }
 
@@ -31,23 +31,31 @@ async function findAll() {
     }
 }
 
-async function getUser(user) {
+async function checkUser(username) {
     try {
-        const {username} = user;
-        return User.findById({username});
+        return await User.findOne({username});
     } catch (err) {
         console.log("[!] Error");
         console.error(err);
-        return false;
+        return null;
     }
 }
 
-async function logUser(User) {
-    
+async function verify(username, password) {
+    try {
+        const user = await User.findOne({username});
+        const match = await bcrypt.compare(password, user.password);
+        return match;
+    } catch (err) {
+        console.log("[!] Error");
+        console.error(err);
+        return null;
+    }
 }
 
 module.exports = {
-    createUser,
+    register,
     findAll,
-    getUser
+    checkUser,
+    verify,
 }
