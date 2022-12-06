@@ -9,13 +9,13 @@ passport.use(new LocalStrategy(
             if (err) { return done(err); }
             if (!user) { 
                 console.log("User not found... Sending status 404");
-                return done(null, 404); 
+                return done(null, 404);
             }
-
             if (!await usersService.verify(username, password)) { 
                 console.log("Password not matching... Sending status 403");
-                return done(null, 403); 
+                return done(null, 403);
             }
+            console.log("User verified !");
             return done(null, user);
         });
     }

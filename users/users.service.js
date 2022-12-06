@@ -7,7 +7,7 @@ const saltRounds = 10;
 
 async function register(username, password) {
     try {
-        if (user === undefined) throw new Error("undefined location");
+        if (username === undefined) throw new Error("undefined location");
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         const user = await User.create({
             username,
@@ -32,9 +32,40 @@ async function findAll() {
     }
 }
 
+async function getUser(id) {
+    try {
+        return await User.findOne({id});
+    } catch (err) {
+        console.log("[!] Error");
+        console.error(err);
+        return null;
+    }
+}
+
 async function checkUser(username) {
     try {
         return await User.findOne({username});
+    } catch (err) {
+        console.log("[!] Error");
+        console.error(err);
+        return null;
+    }
+}
+
+async function update(id, property) {
+    try {
+        await User.findOneAndUpdate({id}, property);
+        return await getUser(id);
+    } catch (err) {
+        console.log("[!] Error");
+        console.error(err);
+        return null;
+    }
+}
+
+async function deleteUser(id) {
+    try {
+        return await User.findOneAndDelete({_id:id});
     } catch (err) {
         console.log("[!] Error");
         console.error(err);
@@ -54,6 +85,8 @@ async function verify(username, password) {
     }
 }
 
+
+
 async function generateJWT(username) {
     return jwt.sign({sub:username}, process.env.JWT_SECRET);
 }
@@ -61,7 +94,10 @@ async function generateJWT(username) {
 module.exports = {
     register,
     findAll,
+    getUser,
     checkUser,
     verify,
-    generateJWT
+    generateJWT,
+    update,
+    deleteUser
 }

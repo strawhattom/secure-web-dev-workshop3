@@ -1,6 +1,8 @@
 const router = require('express').Router()
 const usersService = require('./users.service')
-const passport = require('../auth/local.strategy');
+const passport = require('passport');
+require('../auth/local.strategy');
+require('../auth/jwt.strategy');
 
 // Register route
 router.post('/users/register', async (req, res) => {
@@ -17,20 +19,28 @@ router.post('/users/register', async (req, res) => {
 router.post('/users/login', 
     passport.authenticate('local', { session:false, failureRedirect:'/'}),
     async (req, res) => {
-        const token = await usersService.generateJWT(req.user?.username)
+        if(req.user == 403) 
+            return res.status(403).send({message:"Password not matched"});
+        if(req.user == 404)
+            return res.status(404).send({message:"User not found"});
+        const token = await usersService.generateJWT(req.user?._id)
         return res.status(200).send({token});
     });
 
+router.use('/users/me',passport.authenticate('jwt', { session:false, failureRedirect:'/'}));
 // Get self
 router.route('/users/me')
     .get(async (req, res) => {
-        
+        if (req.user == 404) return res.status(404).send("User not found");
+        return res.status(200).send(await usersService.getUser(req.user));
     })
-    .put(async (req, res) => {
-
+    .patch(async (req, res) => {
+        if (req.user == 404) return res.status(404).send("User not found");
+        return res.status(200).send(await usersService.update(req.user, req.body));
     })
     .delete(async (req, res) => {
-        
+        if (req.user == 404) return res.status(404).send("User not found");
+        return res.status(200).send(await(usersService.deleteUser(req.user)));
     });
 
 // Get all users

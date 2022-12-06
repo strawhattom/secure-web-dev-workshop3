@@ -3,14 +3,10 @@
 
 const router = require('express').Router()
 const locationsService = require('./locations.service')
+const passport = require('passport');
+require('../auth/jwt.strategy');
 
-
-const checkUser = (req,res,next) => {
-	if (!req.headers.authorization) {
-		return res.status(403).send({ error: 'Not logged' });
-	}
-	next();
-};
+const checkUser = passport.authenticate('jwt', { session: false });
 
 router.use('/locations', checkUser);
 
@@ -68,6 +64,7 @@ router.route('/locations')
 
 router.route('/locations/:id')
 	.get(async (req, res) => {
+		console.log("[GET] TOKEN : " + req.user);
 		if (req?.params?.id === undefined) return res.status(400).send("Bad request, please provide an ID");
 		const _id = req.params.id;
 		const response = await locationsService.findOne({_id});
