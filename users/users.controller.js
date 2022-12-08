@@ -35,15 +35,12 @@ router.use('/users/me',passport.authenticate('jwt', {
 // Get self
 router.route('/users/me')
     .get(async (req, res) => {
-        if (req.user == 404) return res.status(404).send("User not found");
         return res.status(200).send(await usersService.getUser(req.user));
     })
     .patch(async (req, res) => {
-        if (req.user == 404) return res.status(404).send("User not found");
         return res.status(200).send(await usersService.update(req.user, req.body));
     })
     .delete(async (req, res) => {
-        if (req.user == 404) return res.status(404).send("User not found");
         return res.status(200).send(await(usersService.deleteUser(req.user)));
     });
 
