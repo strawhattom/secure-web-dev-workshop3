@@ -6,14 +6,9 @@ const locationsService = require('./locations.service')
 const passport = require('passport');
 require('../auth/jwt.strategy');
 
-const checkUser = passport.authenticate('jwt', { session: false });
 
-router.use('/locations', checkUser);
-
-// Routes
-router.get('/', (req, res) => {
-	return res.status(200).send("Hello World, go on /locations to get all locations");
-})
+// Authorization middleware
+router.use('/locations', passport.authenticate('jwt', { session: false }));
 
 router.route('/locations')
 	.get(async (req, res) => {

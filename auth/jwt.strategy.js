@@ -2,20 +2,18 @@ const passport = require('passport');
 const User = require('../users/users.model');
 const { Strategy, ExtractJwt } = require('passport-jwt');
 
-var opts = {}
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = process.env.JWT_SECRET;
-passport.use(new Strategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.sub}, function(err, user) {
-        if (user === null || err) {
-            return done(err, false);
+passport.use(new Strategy(
+        {
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),   // extract token from Authorization header as a Bearer token
+            secretOrKey: process.env.JWT_SECRET                         // jwt secret extracted from .env
+        },
+        function(token, done) {
+            User.findOne({id: token.sub}, function(err, user) {
+                if (err)    return done(err, false);        // error
+                if (user)   return done(null, user?._id);   // user found
+                return done(null, false);                   // user not found
+            });
         }
-        if (user) {
-            return done(null, user._id);
-        } else {
-            return done(null, 404); // unauthorized
-        }
-    });
-}));
-
+    )
+);
 module.exports = passport;

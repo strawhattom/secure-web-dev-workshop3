@@ -12,22 +12,32 @@ router.post('/users/register', async (req, res) => {
         const user = await usersService.register(username, password);
         if (user) return res.status(200).send(user);
         else return res.status(400).send("An error occurred, bad request");
-    } else return res.status(400).send("Please send the right format : {\"username\":<YOUR_USERNAME>,\"password\":\"<YOUR_PASSWORD>\"}");
+    } else return res.status(400).send("Please send the right format : {\"username\":$USERNAME,\"password\":\"$PASSWORD\"}");
 });
 
 // Login route
+
 router.post('/users/login', 
-    passport.authenticate('local', { session:false, failureRedirect:'/'}),
+    passport.authenticate('local', {
+        session: false,
+    }),
     async (req, res) => {
-        if(req.user == 403) 
-            return res.status(403).send({message:"Password not matched"});
-        if(req.user == 404)
-            return res.status(404).send({message:"User not found"});
-        const token = await usersService.generateJWT(req.user?._id)
+        const statusCode = req.user?.status;
+        const message = req.user?.message;
+
+        // If there is an status code and a message
+        if (statusCode && message) return res.status(statusCode).send({message});
+
+        const userId = req.user?._id;
+        const token = await usersService.generateJWT(userId);
         return res.status(200).send({token});
     });
 
-router.use('/users/me',passport.authenticate('jwt', { session:false, failureRedirect:'/'}));
+// JWT middleware
+router.use('/users/me',passport.authenticate('jwt', {
+    session:false, failureRedirect:'/users/login'
+}));
+
 // Get self
 router.route('/users/me')
     .get(async (req, res) => {
