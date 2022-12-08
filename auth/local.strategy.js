@@ -8,18 +8,12 @@ passport.use(new Strategy(
         User.findOne({ username }, async function (err, user) {
             if (err)    return done(err)
             if (!user)  {
-                console.log("[-] User not found sending 404 status code");
-                return done(null, {
-                    status: 404,
-                    message:"User not found"
-                });
+                console.log("[-] User not found");
+                return done(null, false);
             }
             if (!await usersService.verify(username, password)){
-                console.log("[-] Wrong password... sending 403 status code");
-                return done(null, {
-                    status: 403,
-                    message: "Wrong password"
-                });
+                console.log("[-] Wrong password...");
+                return done(null, false);
             }
             return done(null, user);
         });

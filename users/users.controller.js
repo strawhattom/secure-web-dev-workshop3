@@ -22,12 +22,6 @@ router.post('/users/login',
         session: false,
     }),
     async (req, res) => {
-        const statusCode = req.user?.status;
-        const message = req.user?.message;
-
-        // If there is an status code and a message
-        if (statusCode && message) return res.status(statusCode).send({message});
-
         const userId = req.user?._id;
         const token = await usersService.generateJWT(userId);
         return res.status(200).send({token});
