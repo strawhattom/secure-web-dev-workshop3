@@ -23,7 +23,7 @@ async function createOne(location) {
 		if (location === undefined) throw new Error("undefined location");
 		
 		const { filmType, filmProducerName, endDate, filmName, district, geolocation, sourceLocationId, filmDirectorname, address, startDate, year } = location;
-		await Location.create({ filmType,
+		return await Location.create({ filmType,
 			filmProducerName,
 			endDate,
 			filmName,
@@ -34,14 +34,12 @@ async function createOne(location) {
 			address,
 			startDate,
 			year
-		}).orFail();
-		console.log("Location added");
-		return true;
+		});
 		
     } catch (err) {
         console.log("No location");
 		console.error(err);
-		return false;
+		return null;
     }
 }
 
