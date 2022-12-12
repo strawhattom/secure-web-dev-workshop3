@@ -54,6 +54,7 @@ async function checkUser(username) {
 
 async function update(id, property) {
     try {
+        if (property.role) delete property.role;
         await User.findOneAndUpdate({id}, property);
         return await getUser(id);
     } catch (err) {
