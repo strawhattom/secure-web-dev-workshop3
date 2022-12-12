@@ -8,12 +8,13 @@ const roleMiddleware = require('../middleware/auth.middleware');
 // Register route
 router.post('/users/register', async (req, res) => {
     console.log(req.body);
-    if (req.body?.username && req.body?.password) {
-        const {username, password} = req.body;
-        const user = await usersService.register(username, password);
-        if (user) return res.status(200).send(user);
-        else return res.status(400).send("An error occurred, bad request");
-    } else return res.status(400).send("Please send the right format : {\"username\":$USERNAME,\"password\":\"$PASSWORD\"}");
+    if (!req.body?.username || !req.body?.password) {
+        return res.status(400).send("Please send the right format : {\"username\":$USERNAME,\"password\":\"$PASSWORD\"}");
+    }
+    const {username, password} = req.body;
+    const user = await usersService.register(username, password);
+    if (user) return res.status(200).send(user);
+    return res.status(400).send("An error occurred, bad request");
 });
 
 // Login route
@@ -36,13 +37,13 @@ router.use('/users/me',passport.authenticate('jwt', {
 // Get self
 router.route('/users/me')
     .get(async (req, res) => {
-        return res.status(200).send(await usersService.getUser(req.user));
+        return res.status(200).send(await usersService.getUser(req.user._id));
     })
     .patch(async (req, res) => {
-        return res.status(200).send(await usersService.update(req.user, req.body));
+        return res.status(200).send(await usersService.update(req.user._id, req.body));
     })
     .delete(async (req, res) => {
-        return res.status(200).send(await(usersService.deleteUser(req.user)));
+        return res.status(200).send(await usersService.deleteUser(req.user._id));
     });
 
 // Get all users
