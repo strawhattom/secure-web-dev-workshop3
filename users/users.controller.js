@@ -3,6 +3,7 @@ const usersService = require('./users.service')
 const passport = require('passport');
 require('../auth/local.strategy');
 require('../auth/jwt.strategy');
+const roleMiddleware = require('../middleware/auth.middleware');
 
 // Register route
 router.post('/users/register', async (req, res) => {
@@ -45,8 +46,13 @@ router.route('/users/me')
     });
 
 // Get all users
-router.get('/users', async (req, res) => {
-    return res.status(200).send({users:usersService.findAll()});
+router.get('/users', 
+    passport.authenticate('jwt', {
+        session: false,
+    }),
+    roleMiddleware(["admin"]),
+    async (req, res) => {
+        return res.status(200).send({users:await usersService.findAll()});
 });
 
 
