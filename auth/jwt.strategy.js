@@ -9,7 +9,6 @@ passport.use(new Strategy(
         },
         function(token, done) {
             User.findOne({_id: token.sub}, function(err, user) {
-                console.log(user)
                 if (err)    return done(err, false);        // error
                 if (user)   return done(null, {
                     _id:user?._id,
