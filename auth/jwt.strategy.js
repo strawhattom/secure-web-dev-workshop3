@@ -8,9 +8,13 @@ passport.use(new Strategy(
             secretOrKey: process.env.JWT_SECRET                         // jwt secret extracted from .env
         },
         function(token, done) {
-            User.findOne({id: token.sub}, function(err, user) {
+            User.findOne({_id: token.sub}, function(err, user) {
+                console.log(user)
                 if (err)    return done(err, false);        // error
-                if (user)   return done(null, user?._id);   // user found
+                if (user)   return done(null, {
+                    _id:user?._id,
+                    role:user?.role
+                });   // user found
                 return done(null, false);                   // user not found
             });
         }
