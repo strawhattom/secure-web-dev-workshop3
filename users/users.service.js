@@ -69,7 +69,10 @@ async function deleteUser(id) {
 
 async function verify(username, password) {
     try {
+        
+        if (username === undefined || password === undefined) throw new Error("undefined parameter");
         const user = await User.findOne({username});
+        if (!user || user.username != username) throw new Error("Unknown username");
         const match = await bcrypt.compare(password, user.password);
         return match;
     } catch (err) {
