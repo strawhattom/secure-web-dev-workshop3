@@ -31,7 +31,7 @@ async function findAll() {
 
 async function getUser(id) {
     try {
-        return await User.findOne({id}).select("username role");
+        return await User.findOne({id});
     } catch (err) {
         console.error(err);
         return null;
