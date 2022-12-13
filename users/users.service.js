@@ -22,10 +22,10 @@ async function register(username, password) {
 
 async function findAll() {
     try {
-        return User.find({}).select('username');
+        return User.find({});
     } catch (err) {
         console.error(err);
-        return false;
+        return {};
     }
 }
 
