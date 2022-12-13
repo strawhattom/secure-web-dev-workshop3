@@ -11,27 +11,27 @@ describe('User registration', () => {
         expect(await service.register("user",undefined)).toBe(null);
     });
     it('Should register the user', async () => {
-        const data = {
+        const _doc = {
             _id: "6398496a3abda61ed31ad734",
             username: "user",
             password: "$2a$10$DcRs13wKxeYMj0mqDd3aOusl97cA9Fa9Uw9BCBNixade/W1CgNOgW",
             role: "user"
         }
-        User.create.mockResolvedValue(data);
-        expect(await service.register("user","password")).toBe(data);
+        User.create.mockResolvedValue(_doc);
+        expect(await service.register("user","password")).toBe(_doc);
     });
 });
 
 describe('User authentication', () => {
     // Mock return value
-    const data = {
+    const _doc = {
         _id: "6398496a3abda61ed31ad734",
         username: "user",
         password: "$2b$10$JHsxEB3arf2mCIjL7j2Ltu3zdJ3k7Wqm4eX/MyLvApzoKxAWeX6ue", // password from mongodb
         role: "user"
     }
-    User.create.mockResolvedValue(data);
-    User.findOne.mockResolvedValue(data);
+    User.create.mockResolvedValue(_doc);
+    User.findOne.mockResolvedValue(_doc);
 
     it('Should authenticate with corrects credentials', async () => {
         const username = "user";
@@ -65,13 +65,13 @@ describe('User research', () => {
         expect(await service.findAll()).toStrictEqual({});
     });
     it('Should return an user', async () => {
-        const data = {
+        const _doc = {
             _id: "6398496a3abda61ed31ad734",
             username: "user",
             password: "$2b$10$JHsxEB3arf2mCIjL7j2Ltu3zdJ3k7Wqm4eX/MyLvApzoKxAWeX6ue", // password from mongodb
             role: "user"
         }
-        User.find.mockResolvedValue(data);
-        expect(await service.getUser("6398496a3abda61ed31ad734")).toStrictEqual(data)
+        User.find.mockResolvedValue(_doc);
+        expect(await service.getUser("6398496a3abda61ed31ad734")).toStrictEqual(_doc)
     });
 })
