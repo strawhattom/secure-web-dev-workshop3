@@ -3,6 +3,7 @@ const locationController = require('./locations/locations.controller')
 const userController = require('./users/users.controller');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express()
@@ -26,6 +27,11 @@ app.get('/', (req, res) => {
 	});
 })
 
-app.listen(port, () => {
-	console.log(`API listening on port ${port}, visit http://localhost:${port}/`)
-})
+const main = async() => {
+	await mongoose.connect(process.env.MONGO_ROOT_URI);
+	app.listen(port, () => {
+		console.log(`API listening on port ${port}, visit http://localhost:${port}/`)
+	})
+}
+
+main();
