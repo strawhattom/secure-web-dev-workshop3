@@ -38,15 +38,6 @@ async function getUser(id) {
     }
 }
 
-async function checkUser(username) {
-    try {
-        return await User.findOne({username});
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-}
-
 async function update(id, property) {
     try {
         if (property.role) delete property.role;
@@ -69,7 +60,6 @@ async function deleteUser(id) {
 
 async function verify(username, password) {
     try {
-        
         if (username === undefined || password === undefined) throw new Error("undefined parameter");
         const user = await User.findOne({username});
         if (!user || user.username != username) throw new Error("Unknown username");
@@ -89,7 +79,6 @@ module.exports = {
     register,
     findAll,
     getUser,
-    checkUser,
     verify,
     generateJWT,
     update,
