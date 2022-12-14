@@ -37,7 +37,7 @@ router.use('/users/me',passport.authenticate('jwt', {
 // Get self
 router.route('/users/me')
     .get(async (req, res) => {
-        return res.status(200).send(await usersService.getUser(req.user._id));
+        return res.status(200).send(await usersService.findOne(req.user._id));
     })
     .patch(async (req, res) => {
         return res.status(200).send(await usersService.update(req.user._id, req.body));
