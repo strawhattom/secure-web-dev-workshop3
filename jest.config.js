@@ -1,3 +1,5 @@
 module.exports = {
-    testEnvironment: 'node'
+    testEnvironment: 'node',
+    testMatch: ["**/**/**.**.spec.js"],
+    forceExit: true
 }
