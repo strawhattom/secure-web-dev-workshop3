@@ -29,12 +29,12 @@ async function findAll() {
     }
 }
 
-async function getUser(id) {
+async function findOne(_id) {
     try {
-        return await User.findOne({id});
+        return await User.findOne({_id});
     } catch (err) {
         console.error(err);
-        return null;
+        return {};
     }
 }
 
@@ -42,7 +42,7 @@ async function update(id, property) {
     try {
         if (property.role) delete property.role;
         await User.findOneAndUpdate({id}, property);
-        return await getUser(id);
+        return await findOne(id);
     } catch (err) {
         console.error(err);
         return null;
@@ -78,7 +78,7 @@ async function generateJWT(id) {
 module.exports = {
     register,
     findAll,
-    getUser,
+    findOne,
     verify,
     generateJWT,
     update,
