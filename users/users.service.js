@@ -7,7 +7,7 @@ const saltRounds = 10;
 
 async function register(username, password) {
     try {
-        if (username === undefined || password === undefined) throw new Error("undefined parameters");
+        if (!username || !password) throw new Error("undefined parameters");
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         const user = await User.create({
             username,
@@ -41,6 +41,10 @@ async function findOne(_id) {
 async function update(id, property) {
     try {
         if (property.role) delete property.role;
+        if (property.password) {
+            const hashedPassword = await bcrypt.hash(property.password, saltRounds);
+            property.password = hashedPassword;
+        }
         await User.findOneAndUpdate({id}, property);
         return await findOne(id);
     } catch (err) {
