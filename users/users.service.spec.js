@@ -31,7 +31,7 @@ describe('User authentication', () => {
         role: "user"
     }
     User.create.mockResolvedValue(_doc);
-    User.findOne.mockResolvedValue(_doc);
+    User.findOne.mockReturnValueOnce(_doc).mockReturnValueOnce(null).mockReturnValue(_doc);
 
     it('Should authenticate with corrects credentials', async () => {
         const username = "user";
@@ -52,10 +52,8 @@ describe('User authentication', () => {
         expect(verify).toBe(false);
     });
     it('Should not authenticate with undefined parameters', async () => {
-        const username = "user";
-        const password = "wrong";
-        const verify = await service.verify(username, password);
-        expect(verify).toBe(false);
+        const verify = await service.verify(undefined, undefined);
+        expect(verify).toBe(null);
     });
 })
 
@@ -72,6 +70,6 @@ describe('User research', () => {
             role: "user"
         }
         User.find.mockResolvedValue(_doc);
-        expect(await service.getUser("6398496a3abda61ed31ad734")).toStrictEqual(_doc)
+        expect(await service.findOne("6398496a3abda61ed31ad734")).toStrictEqual(_doc)
     });
 })
