@@ -20,40 +20,9 @@ router.route('/locations')
 		async (req, res) => {
 			if (!req.body) 
 				return res.status(400).send("Parameters not found");
-			
-			const body = req.body;
-			if (!body.filmType ||
-				!body.filmProducerName ||
-				!body.endDate ||
-				!body.filmName ||
-				!body.district ||
-				!body?.geolocation?.coordinates ||
-				!body?.geolocation?.type ||
-				!body.sourceLocationId ||
-				!body.filmDirectorName ||
-				!body.address ||
-				!body.startDate ||
-				!body.year) {
-					return res.status(400).send("Parameters are incorrect, please use : \n" +
-						"{\t\nfilmType: String,\n" +
-						"\tfilmProducerName: String, \n" +
-						"\tendDate: Date, \n" +
-						"\tfilmName: String, \n" +
-						"\tdistrict: Number, \n" +
-						"\tgeolocation: {\n" +
-							"\t\tcoordinates: [Number], \n" +
-							"\t\ttype: { type: String }, \n" +
-						"\t}, \n" +
-						"\tsourceLocationId: String, \n" +
-						"\tfilmDirectorName: String, \n" +
-						"\taddress: String, \n" +
-						"\tstartDate: Date, \n" + 
-						"\tyear: Number\n}"
-					);
-			}
-			const create = await locationsService.createOne(body);
+			const create = await locationsService.createOne(req.body);
 			if (create) return res.status(200).send(create);
-			return res.status(400).send("An error occurred when creating a location");
+			return res.status(400).send("Either body is incorrect or an error occurred when creating a location");
 });
 
 router.route('/locations/:id')
