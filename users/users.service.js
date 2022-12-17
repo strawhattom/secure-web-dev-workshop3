@@ -15,7 +15,6 @@ async function register(username, password) {
         });
         return user;
     } catch (err) {
-		console.error(err);
 		return null;
     }
 }
@@ -24,7 +23,6 @@ async function findAll() {
     try {
         return User.find({});
     } catch (err) {
-        console.error(err);
         return {};
     }
 }
@@ -33,7 +31,6 @@ async function findOne(_id) {
     try {
         return await User.findOne({_id});
     } catch (err) {
-        console.error(err);
         return {};
     }
 }
@@ -48,7 +45,6 @@ async function update(id, property) {
         await User.findOneAndUpdate({id}, property);
         return await findOne(id);
     } catch (err) {
-        console.error(err);
         return null;
     }
 }
@@ -57,20 +53,18 @@ async function deleteUser(id) {
     try {
         return await User.findOneAndDelete({_id:id});
     } catch (err) {
-        console.error(err);
         return null;
     }
 }
 
 async function verify(username, password) {
     try {
-        if (!username || !password) throw new Error("undefined parameter");
+        if (!username || !password) throw new Error("undefined parameters");
         const user = await User.findOne({username});
         if (!user) throw new Error("Unknown username");
         const match = await bcrypt.compare(password, user.password);
         return match;
     } catch (err) {
-        console.error(err);
         return null;
     }
 }

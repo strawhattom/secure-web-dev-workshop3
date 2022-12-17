@@ -8,12 +8,10 @@ async function findAll () {
 async function findOne({_id}) {
 	try {
 		if (_id.match(/^[0-9a-fA-F]{24}$/))
-        	return Location.findOne({_id}, null).orFail();
+        	return Location.findOne({_id}, null);
 		else
 			throw new Error("id specified is incorrect");
     } catch (err) {
-        console.log("Something occured while retrieving a location");
-        console.error(err);
 		return null;
     }
 }
@@ -37,8 +35,6 @@ async function createOne(location) {
 		});
 		
     } catch (err) {
-        console.log("No location");
-		console.error(err);
 		return null;
     }
 }
@@ -50,8 +46,6 @@ async function deleteOne(id){
 		console.log(`Deleted ${_id}`);
 		return true;
 	} catch (e) {
-		console.log("No delete");
-		console.error(err);
 		return false;
 	}
 }
@@ -63,8 +57,6 @@ async function updateOne(id, property){
 		console.log(`Updated ${_id}`);
 		return true;
 	} catch (e) {
-		console.log("No update");
-		console.error(err);
 		return false;
 	}
 }
